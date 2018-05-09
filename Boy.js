@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import Girl from './Girl';
+import NavigationBar from './NavigationBar'
 
 export default class Boy extends Component {
 
@@ -21,6 +22,7 @@ export default class Boy extends Component {
 
     static navigationOptions = {
         headerTitle: 'Boy',
+        header:null,
     };
 
     render() {
@@ -28,7 +30,17 @@ export default class Boy extends Component {
 
         return (
             <View style={styles.container}>
+                <NavigationBar
+                    title={'Boy'}
+                    style={{
+                        backgroundColor: 'red'
+                    }}
+                    statusBar={{
+                        backgroundColor:'red',
+                        barStyle:'light-content'
 
+                    }}
+                />
                 <Text style={styles.text}>I am boy</Text>
                 <Text style={styles.text}
 
@@ -57,7 +69,6 @@ const styles = StyleSheet.create({
 
         flex: 1,
         backgroundColor: 'gray',
-        justifyContent: 'center',
     },
     text: {
 
