@@ -19,6 +19,7 @@ import {
 import TabNavigator from 'react-native-tab-navigator';
 import Boy from './Boy';
 import Girl from './Girl';
+import ListViewTest from './ListViewTest';
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' +
     'Cmd+D or shake for dev menu',
@@ -27,8 +28,15 @@ const instructions = Platform.select({
 });
 
 const App = StackNavigator({
-    Home: { screen: Boy },
-    Girl: { screen: Girl}
+    Home: {
+        screen: ListViewTest,
+
+        navigationOptions : {
+            header:null,
+        }
+    },
+    Girl: { screen: Girl},
+
 });
 
 export default App;
