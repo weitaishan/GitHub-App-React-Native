@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import NavigationBar from './NavigationBar'
+import HttpUtils from './HttpUtils';
 
 const api = 'https://api.douban.com/v2/movie/in_theaters';
 
@@ -19,55 +20,87 @@ export default class FetchTest extends Component {
         super(props);
         this.state = {
 
-            result:'',
+            result: '',
         }
     }
 
 
     onLoad(url) {
-        fetch(url)
-            .then(response => response.json())
+        // fetch(url)
+        //     .then(response => response.json())
+        //     .then(result => {
+        //
+        //         this.setState({
+        //
+        //             result:JSON.stringify(result)
+        //         })
+        //     })
+        //     .catch(error=>{
+        //
+        //         this.setState({
+        //
+        //             result:JSON.stringify(error)
+        //         })
+        //     })
+
+        HttpUtils.get(url)
             .then(result => {
 
-                this.setState({
-
-                    result:JSON.stringify(result)
-                })
-            })
-            .catch(error=>{
 
                 this.setState({
 
-                    result:JSON.stringify(error)
+                    result: JSON.stringify(result)
                 })
             })
+            .catch(error => {
 
+                this.setState({
+
+                    result: JSON.stringify(error)
+                })
+            })
     }
 
-    onSubmit(url,data){
+    onSubmit(url, data) {
 
-        fetch(url,{
+        // fetch(url, {
+        //
+        //     method: 'Post',
+        //     header: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(data)
+        // })
+        //     .then(response => response.json())
+        //     .then(result => {
+        //
+        //         this.setState({
+        //
+        //             result: JSON.stringify(result)
+        //         })
+        //     })
+        //     .catch(error => {
+        //
+        //         this.setState({
+        //
+        //             result: JSON.stringify(error)
+        //         })
+        //     })
 
-            method:'Post',
-            header:{
-                'Accept' : 'application/json',
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify(data)
-        })
-            .then(response=>response.json())
+        HttpUtils.post(url, data)
             .then(result => {
-
-            this.setState({
-
-                result:JSON.stringify(result)
-            })
-        })
-            .catch(error=>{
 
                 this.setState({
 
-                    result:JSON.stringify(error)
+                    result: JSON.stringify(result)
+                })
+            })
+            .catch(error => {
+
+                this.setState({
+
+                    result: JSON.stringify(error)
                 })
             })
     }
@@ -83,7 +116,7 @@ export default class FetchTest extends Component {
                 />
                 <Text
                     style={styles.tips}
-                    onPress={() => this.onLoad(api,{userName:'小明',password:'123456'})}
+                    onPress={() => this.onLoad(api, {userName: '小明', password: '123456'})}
                 >获取数据</Text>
                 <Text
                     style={styles.tips}
@@ -99,11 +132,11 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor:'white'
+        backgroundColor: 'white'
     },
-    tips:{
+    tips: {
 
-        fontSize:18
+        fontSize: 18
     },
     text: {
         fontSize: 22
