@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 
     container: {
 
-        backgroundColor: '#6492E2'
+        backgroundColor: '#2196F3'
     },
     navBar: {
         justifyContent: 'space-between',
