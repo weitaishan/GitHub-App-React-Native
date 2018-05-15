@@ -10,6 +10,7 @@ import {
 import NavigationBar from '../common/NavigationBar'
 import TabNavigator from 'react-native-tab-navigator';
 import PopularPage from './PopularPage';
+import AsyncStorageTest from '../../AsyncStorageTest';
 export default class HomePage extends Component {
 
     constructor(props) {
@@ -44,7 +45,7 @@ export default class HomePage extends Component {
                         renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_trending.png')}/>}
                         renderSelectedIcon={() => <Image style={[styles.image,{tintColor: 'yellow'}]} source={require('../../res/images/ic_trending.png')}/>}
                         onPress={() => this.setState({selectedTab: 'tb_trending'})}>
-                        <View style={styles.page2}></View>
+                        <AsyncStorageTest style={styles.page2}></AsyncStorageTest>
                     </TabNavigator.Item>
 
                     <TabNavigator.Item
