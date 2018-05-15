@@ -13,7 +13,7 @@ import NavigationBar from '../common/NavigationBar'
 import DataRepository from '../expand/data/DataRepository';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import RepositoryCell from '../common/RepositoryCell';
-
+import LanguageDao,{FLAG_LANGUAGE} from '../expand/data/LanguageDao';
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 export default class PopularPage extends Component {
@@ -23,42 +23,53 @@ export default class PopularPage extends Component {
 
         super(props);
         this.dataRepository = new DataRepository();
+        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.state = {
 
             result: '',
-            isLoading: false
+            isLoading: false,
+            languages:[]
         }
     }
 
+    componentDidMount(){
 
-    onLoad() {
+        this.loadData();
+    }
+    loadData() {
 
-        let url = this.getUrl(this.text);
-        this.dataRepository.fetchNetRepository(url)
+        this.languageDao.fetch()
             .then(result => {
 
                 this.setState({
-                    result: JSON.stringify(result)
+
+                    languages: result
                 })
             })
             .catch(error => {
 
-                this.setState({
-                    result: JSON.stringify(error)
-                })
+                console.log(error);
             })
-
-
     }
 
-    getUrl(key) {
-
-        return URL + key + QUERY_STR;
-    }
 
     render() {
 
+        let content = this.state.languages.length > 0 ?
+            <ScrollableTabView
+                tabBarBackgroundColor='#2196F3'
+                tabBarInactiveTextColor='mintcream'
+                tabBarActiveTextColor='while'
+                tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
+                renderTabBar={() => <ScrollableTabBar/>}
+            >
+                {this.state.languages.map((result,i,arr)=>{
 
+                    let lan = arr[i];
+                    return lan.checked ? <PopularTab  key={i} tabLabel={lan.name}>{lan.name}</PopularTab> : null
+                })}
+
+            </ScrollableTabView> : null
         return (
 
             <View style={styles.container}>
@@ -71,19 +82,7 @@ export default class PopularPage extends Component {
                         backgroundColor:'#2196E3'
                     }}
                 />
-                <ScrollableTabView
-                    tabBarBackgroundColor='#2196F3'
-                    tabBarInactiveTextColor='mintcream'
-                    tabBarActiveTextColor='while'
-                    tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
-                    renderTabBar={() => <ScrollableTabBar/>}
-                >
-                    <PopularTab tabLabel="Java">Java</PopularTab>
-                    <PopularTab tabLabel="iOS">iOS</PopularTab>
-                    <PopularTab tabLabel="Android">Android</PopularTab>
-                    <PopularTab tabLabel="JavaScript">JavaScript</PopularTab>
-
-                </ScrollableTabView>
+                {content}
             </View>
         )
     }

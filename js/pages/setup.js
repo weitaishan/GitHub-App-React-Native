@@ -9,11 +9,13 @@ import {
 import {StackNavigator} from "react-navigation";
 import WelcomePage from './WelcomePage';
 import HomePage from './HomePage';
+import CustomKeyPage from './my/CustomKeyPage';
 
 const RootStack = StackNavigator(
     {
         Home: WelcomePage,
         HomePage: HomePage,
+        CustomKeyPage: CustomKeyPage
     },
     {
         initialRouteName: 'Home',

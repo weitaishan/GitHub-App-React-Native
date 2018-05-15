@@ -6,8 +6,8 @@ import {
     StyleSheet,
 } from 'react-native';
 
-import NavigationBar from '../common/NavigationBar'
-export default class WelcomePage extends Component {
+import NavigationBar from '../../common/NavigationBar'
+export default class MyPage extends Component {
 
 
     constructor(props) {
@@ -16,36 +16,9 @@ export default class WelcomePage extends Component {
 
     }
 
-    componentDidMount(){
-
-        const { navigate } = this.props.navigation;
-
-
-        this.timer=setTimeout(()=>{
-
-            this.props.navigation.replace('HomePage', {
-
-
-            })
-
-        }, 0)
-    }
-
-    componentWillUnmount(){
-
-        this.timer && clearTimeout(this.timer);
-    }
-
-    static navigationOptions = {
-        headerTitle: '',
-        header:null,
-        animationEnabled:false
-    };
-
-
     render() {
 
-
+        const {navigate} = this.props.navigation;
 
         return (
 
@@ -53,11 +26,15 @@ export default class WelcomePage extends Component {
 
                 <NavigationBar
 
-                    title={'欢迎'}
+                    title={'我的'}
                 />
                 <Text
                     style={styles.tips}
-                >欢迎</Text>
+                    onPress={()=>{
+                        navigate('CustomKeyPage')
+
+                    }}
+                >自定义标签</Text>
             </View>
         )
     }
