@@ -6,7 +6,8 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 
 import NavigationBar from '../../common/NavigationBar';
@@ -51,6 +52,26 @@ export default class CustomKeyPage extends Component {
             })
     }
 
+    onBack(){
+
+        if (this.changeValues.length === 0){
+
+            this.props.navigation.pop();
+            return;
+        } else {
+
+            // iOS和Android上都可用
+            Alert.alert(
+                '提示',
+                '要保存修改吗？',
+                [
+                    {text: '不保存', onPress: () => this.props.navigation.pop(), style: 'cancel'},
+                    {text: 'OK', onPress: () => {this.onSave()}},
+                ],
+                { cancelable: false }
+            )
+        }
+    }
     onSave() {
 
         if (this.changeValues.length === 0) {
@@ -136,7 +157,7 @@ export default class CustomKeyPage extends Component {
                 <NavigationBar
 
                     title={'自定义标签'}
-                    leftButton={ViewUtils.getLeftButton(() => this.onSave())}
+                    leftButton={ViewUtils.getLeftButton(() => this.onBack())}
                     rightButton={rightButton}
                 />
 
