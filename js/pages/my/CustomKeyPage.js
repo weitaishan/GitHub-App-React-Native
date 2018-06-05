@@ -23,6 +23,7 @@ export default class CustomKeyPage extends Component {
         super(props);
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
         this.changeValues=[];
+        this.isRemoveKey = this.props.navigation.state.params.isRemoveKey;
         this.state = {
 
             dataArray: [],
@@ -78,8 +79,12 @@ export default class CustomKeyPage extends Component {
             this.props.navigation.pop();
             return;
         }
-        this.props.navigation.pop();
+        for (let i = 0; i < this.changeValues.length; i ++){
+
+            ArrayUtil.remove(this.state.dataArray, this.changeValues[i]);
+        }
         this.languageDao.save(this.state.dataArray);
+        this.props.navigation.pop();
 
     }
 
@@ -117,19 +122,20 @@ export default class CustomKeyPage extends Component {
 
     onClick(data){
 
-        data.checked=!data.checked;
+        if (!this.isRemoveKey) data.checked=!data.checked;
         ArrayUtil.updateArray(this.changeValues, data);
     }
     renderCheckBox(data) {
 
         let leftText = data.name;
+        let isChecked = this.isRemoveKey ? false : data.checked;
         return (
 
             <CheckBox
                 style={{flex:1,padding:10}}
                 onClick={() => this.onClick(data)}
                 leftText={leftText}
-                isChecked={data.checked}
+                isChecked={isChecked}
                 checkedImage={<Image style={{tintColor:'#6495ED'}}
                                      source={require('./img/ic_check_box.png')}/>}
                 unCheckedImage={<Image
@@ -141,13 +147,19 @@ export default class CustomKeyPage extends Component {
 
     render() {
 
+        let title = this.isRemoveKey ? '标签移除' : '自定义标签';
+        let rightButtonTitle = this.isRemoveKey ? '移除' : '保存';
+
+
         let rightButton = <TouchableOpacity
             onPress={() => this.onSave()}
         >
             <View style={{margin: 10}}>
-                <Text style={styles.title}>保存</Text>
+                <Text style={styles.title}>{rightButtonTitle}</Text>
             </View>
         </TouchableOpacity>
+
+
 
         return (
 
@@ -156,7 +168,7 @@ export default class CustomKeyPage extends Component {
 
                 <NavigationBar
 
-                    title={'自定义标签'}
+                    title={title}
                     leftButton={ViewUtils.getLeftButton(() => this.onBack())}
                     rightButton={rightButton}
                 />

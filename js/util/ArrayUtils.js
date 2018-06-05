@@ -50,4 +50,18 @@ export default class ArrayUtils{
 
         return true;
     }
+
+    /**
+     * 将数组中指定元素移除
+     * */
+    static remove(arr,item) {
+
+        if (!arr) return;
+        for (let i = 0; i < arr.length; i++) {
+
+            if (arr[i] === item) arr.splice(i, 1);
+
+        }
+
+    }
 }

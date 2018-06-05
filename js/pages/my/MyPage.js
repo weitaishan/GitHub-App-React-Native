@@ -33,7 +33,10 @@ export default class MyPage extends Component {
                 <Text
                     style={styles.tips}
                     onPress={()=>{
-                        navigate('CustomKeyPage')
+                        navigate('CustomKeyPage', {
+
+                            isRemoveKey:false
+                        })
 
                     }}
                 >自定义标签</Text>
@@ -44,6 +47,16 @@ export default class MyPage extends Component {
 
                     }}
                 >标签排序</Text>
+                <Text
+                    style={styles.tips}
+                    onPress={()=>{
+                        navigate('CustomKeyPage', {
+
+                            isRemoveKey:true
+                        })
+
+                    }}
+                >标签移除</Text>
             </View>
         )
     }
