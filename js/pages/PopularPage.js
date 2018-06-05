@@ -6,14 +6,16 @@ import {
     StyleSheet,
     TextInput,
     FlatList,
-    RefreshControl
+    RefreshControl,
+    DeviceEventEmitter
 } from 'react-native';
 
 import NavigationBar from '../common/NavigationBar'
 import DataRepository from '../expand/data/DataRepository';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import RepositoryCell from '../common/RepositoryCell';
-import LanguageDao,{FLAG_LANGUAGE} from '../expand/data/LanguageDao';
+import LanguageDao, {FLAG_LANGUAGE} from '../expand/data/LanguageDao';
+
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 export default class PopularPage extends Component {
@@ -28,14 +30,15 @@ export default class PopularPage extends Component {
 
             result: '',
             isLoading: false,
-            languages:[]
+            languages: []
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
 
         this.loadData();
     }
+
     loadData() {
 
         this.languageDao.fetch()
@@ -63,10 +66,10 @@ export default class PopularPage extends Component {
                 tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
                 renderTabBar={() => <ScrollableTabBar/>}
             >
-                {this.state.languages.map((result,i,arr)=>{
+                {this.state.languages.map((result, i, arr) => {
 
                     let lan = arr[i];
-                    return lan.checked ? <PopularTab  key={i} tabLabel={lan.name}>{lan.name}</PopularTab> : null
+                    return lan.checked ? <PopularTab key={i} tabLabel={lan.name}>{lan.name}</PopularTab> : null
                 })}
 
             </ScrollableTabView> : null
@@ -79,7 +82,7 @@ export default class PopularPage extends Component {
                     title={'最热'}
                     statusBar={{
 
-                        backgroundColor:'#2196E3'
+                        backgroundColor: '#2196E3'
                     }}
                 />
                 {content}
@@ -108,16 +111,36 @@ class PopularTab extends Component {
     onLoad() {
 
         this.setState({
-            isLoading:true
+            isLoading: true
         })
         let url = URL + this.props.tabLabel + QUERY_STR;
-        this.dataRepository.fetchNetRepository(url)
+        this.dataRepository.fetchRepository(url)
             .then(result => {
-
+                let items = result && result.items ? result.item : result ? result : [];
                 this.setState({
-                    result: result.items,
-                    isLoading:false
-                })
+                    result: items,
+                    isLoading: false
+                });
+                if (result && result.update_data && !this.dataRepository.checkData(result.update_data)) {
+
+                    DeviceEventEmitter.emit('showToast',"数据过时");
+                    return this.dataRepository.fetchNetRepository(url);
+                }else {
+
+                    DeviceEventEmitter.emit('showToast',"显示缓存数据");
+
+                }
+            })
+            .then(items => {
+
+                if (!items || items.length === 0) return;
+                this.setState({
+                    result: items,
+                    isLoading: false
+                });
+
+                DeviceEventEmitter.emit('showToast',"显示网络数据");
+
             })
             .catch(error => {
 
@@ -138,7 +161,7 @@ class PopularTab extends Component {
 
         return (
 
-            <View style={{flex:1}}>
+            <View style={{flex: 1}}>
                 <FlatList
                     keyExtractor={item => item.id}
                     data={this.state.result}
@@ -146,7 +169,7 @@ class PopularTab extends Component {
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isLoading}
-                            onRefresh={()=>this.onLoad()}
+                            onRefresh={() => this.onLoad()}
                             colors={['#2196E3']}
                             tintColor={'#2196E3'}
                             title={'Loading...'}
