@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 
 import NavigationBar from '../../common/NavigationBar'
+
+
 export default class MyPage extends Component {
 
 
@@ -35,6 +37,13 @@ export default class MyPage extends Component {
 
                     }}
                 >自定义标签</Text>
+                <Text
+                    style={styles.tips}
+                    onPress={()=>{
+                        navigate('SortKeyPage')
+
+                    }}
+                >标签排序</Text>
             </View>
         )
     }
